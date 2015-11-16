@@ -1,3 +1,5 @@
+"use strict";
+
 var startServer = require('../server');
 var dbConnect = require('./models/db');
 

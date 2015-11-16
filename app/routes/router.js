@@ -1,3 +1,5 @@
+"use strict";
+
 var express = require('express');
 var router = express.Router();
 var CollegeTeam = require('../models/college_team');
@@ -21,13 +23,10 @@ router.route('/collegeteams')
 		});
 	})
 	.post(function(req, res) {
-		var team = new CollegeTeam;
-		console.log("CollegeTeam = " + team);
+		var team = new CollegeTeam();
 
 		team.name = req.body.name;
-		console.log("team name = " + team.name);
 		team.mascot = req.body.mascot;
-		console.log("mascot name = " + team.mascot);
 
 		team.save(function(err) {
 			if (err) {

@@ -19,16 +19,16 @@ function findByName(res, name) {
 
 describe('Single Resource REST API', function() {
 	before(function(done) {
-		var server = startServer();
+		startServer();
 		var conn = dbConnect();
 		conn.connection.on('open', function() {
     	conn.connection.db.dropDatabase();
-   		console.log('======Dropped DBs========');
+   		console.log('======Dropped DBs========\n');
     	done();
     });
 	});
 
-	it('should respond to a GET request', function(done) {
+	it('GET /api request should return WELCOME!', function(done) {
 		chai.request('localhost:3000')
 			.get('/api')
 			.end(function(err, res) {
@@ -40,7 +40,7 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('GET /collegeteams request should respond with no data before data is added to DB', function(done) {
+	it('GET /api/collegeteams request should respond with no data before data is added to DB', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -52,7 +52,7 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('POST /collegeteams request should add a team to DB', function(done) {
+	it('POST /api/collegeteams request should add a team to DB', function(done) {
 		chai.request('localhost:3000')
 			.post('/api/collegeteams')
 			.send({ name: 'LSU', mascot: 'tiger' })
@@ -65,7 +65,7 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('GET /collegeteams request should respond with LSU data after LSU was added to DB', function(done) {
+	it('GET /api/collegeteams request should respond with LSU data after LSU was added to DB', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -78,7 +78,7 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('POST /collegeteams request should add a 2nd team to DB', function(done) {
+	it('POST /api/collegeteams request should add a 2nd team to DB', function(done) {
 		chai.request('localhost:3000')
 			.post('/api/collegeteams')
 			.send({ name: 'Oregon', mascot: 'duck' })
@@ -91,7 +91,7 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('GET /collegeteams request should respond with LSU and Oregon data after Oregon is added to DB', function(done) {
+	it('GET /api/collegeteams request should respond with LSU and Oregon data after Oregon is added to DB', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -104,7 +104,7 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('DELETE /collegeteams/:id should delete Oregon data after finding Oregon ID', function(done) {
+	it('DELETE /api/collegeteams/:id should delete Oregon data after finding Oregon ID', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -124,7 +124,7 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('PUT /collegeteams/:id request should update LSU mascot data', function(done) {
+	it('PUT /api/collegeteams/:id request should update LSU mascot data', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -145,7 +145,7 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('GET /collegeteams/:id request should respond with NEW LSU data after LSU mascot was updated', function(done) {
+	it('GET /api/collegeteams/:id request should respond with NEW LSU data after LSU mascot was updated', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams/' + LSU_id)
 			.end(function(err, res) {
@@ -178,5 +178,17 @@ describe('Single Resource REST API', function() {
 				done();
 			});
 	});
-});
 
+	it('POST /api/collegeteams request FAILS due to DATA VALIDATION b/c mascot is required', function(done) {
+		chai.request('localhost:3000')
+			.post('/api/collegeteams')
+			.send({ name: 'Virginia' })
+			.end(function(err, res) {
+				expect(err).to.be.null;
+				expect(res).to.have.status(200);
+				expect(res).to.be.json;
+				expect(res.body.message).to.equal('CollegeTeam validation failed');
+				done();
+			});
+	});
+});
