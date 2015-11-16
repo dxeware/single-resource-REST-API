@@ -3,10 +3,9 @@
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var expect = require('chai').expect;
-var mongoose = require('mongoose');
+var startServer = require("../server");
+var dbConnect = require('../app/models/db');
 var LSU_id = 0;
-
-//require('../server.js');
 
 chai.use(chaiHttp);
 
@@ -19,24 +18,16 @@ function findByName(res, name) {
 }
 
 describe('Single Resource REST API', function() {
+	before(function(done) {
+		var server = startServer();
+		var conn = dbConnect();
+		conn.connection.on('open', function() {
+    	conn.connection.db.dropDatabase();
+   		console.log('======Dropped DBs========');
+    	done();
+    });
+	});
 
-	var server;
-	server = require('../server.js', { bustCache: true });
-	//before(function (done) {   
-   // var con = mongoose.connect('mongodb://localhost/college_teams');
-   // console.log('connection made');
-    //mongoose.connection.on('open', function() {
-   // 	con.connection.db.dropDatabase();
-    	//	console.log('dropped dbs');
-     	//	done();
-  		//});
-  	//});
-  //});
-	// 	server = require('../server.js', { bustCache: true });
-	// });
-	// afterEach(function(done) {
-	// 	server.close(done);
-	// });
 	it('should respond to a GET request', function(done) {
 		chai.request('localhost:3000')
 			.get('/api')
@@ -48,7 +39,8 @@ describe('Single Resource REST API', function() {
 				done();
 			});
 	});
-	it('should respond with no data to GET /collegeteams request before data is added to DB', function(done) {
+
+	it('GET /collegeteams request should respond with no data before data is added to DB', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -59,9 +51,10 @@ describe('Single Resource REST API', function() {
 				done();
 			});
 	});
-	it('a PUT request to /collegeteams should add a team to DB', function(done) {
+
+	it('POST /collegeteams request should add a team to DB', function(done) {
 		chai.request('localhost:3000')
-			.put('/api/collegeteams')
+			.post('/api/collegeteams')
 			.send({ name: 'LSU', mascot: 'tiger' })
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -71,7 +64,8 @@ describe('Single Resource REST API', function() {
 				done();
 			});
 	});
-	it('should respond with LSU data to GET /collegeteams request after LSU is added to DB', function(done) {
+
+	it('GET /collegeteams request should respond with LSU data after LSU was added to DB', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -83,9 +77,10 @@ describe('Single Resource REST API', function() {
 				done();
 			});
 	});
-	it('a PUT request to /collegeteams should add a 2nd team to DB', function(done) {
+
+	it('POST /collegeteams request should add a 2nd team to DB', function(done) {
 		chai.request('localhost:3000')
-			.put('/api/collegeteams')
+			.post('/api/collegeteams')
 			.send({ name: 'Oregon', mascot: 'duck' })
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -95,7 +90,8 @@ describe('Single Resource REST API', function() {
 				done();
 			});
 	});
-	it('should respond with LSU and Oregon data to GET /collegeteams request after Oregon is added to DB', function(done) {
+
+	it('GET /collegeteams request should respond with LSU and Oregon data after Oregon is added to DB', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -107,7 +103,8 @@ describe('Single Resource REST API', function() {
 				done();
 			});
 	});
-	it('should delete Oregon data to DELETE /collegeteams/:id request', function(done) {
+
+	it('DELETE /collegeteams/:id should delete Oregon data after finding Oregon ID', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -126,7 +123,8 @@ describe('Single Resource REST API', function() {
 					});
 			});
 	});
-	it('should update LSU mascot data to POST /collegeteams/:id request', function(done) {
+
+	it('PUT /collegeteams/:id request should update LSU mascot data', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams')
 			.end(function(err, res) {
@@ -135,7 +133,7 @@ describe('Single Resource REST API', function() {
 				expect(res).to.be.json;
 				LSU_id = findByName(res, 'LSU');
 				chai.request('localhost:3000')
-					.post('/api/collegeteams/' + LSU_id)
+					.put('/api/collegeteams/' + LSU_id)
 					.send({ name: 'LSU', mascot: 'Mike the Tiger' })
 					.end(function(err, res) {
 						expect(err).to.be.null;
@@ -146,7 +144,8 @@ describe('Single Resource REST API', function() {
 					});
 			});
 	});
-	it('should respond with NEW LSU data to GET /collegeteams/:id request after LSU mascot updated', function(done) {
+
+	it('GET /collegeteams/:id request should respond with NEW LSU data after LSU mascot was updated', function(done) {
 		chai.request('localhost:3000')
 			.get('/api/collegeteams/' + LSU_id)
 			.end(function(err, res) {
@@ -158,15 +157,26 @@ describe('Single Resource REST API', function() {
 				done();
 			});
 	});
-	it('should delete NEW LSU record when receiving DELETE /collegeteams/:id request', function(done) {
+
+	it('GET request to UNKNOWN route should respond with 404', function(done) {
 		chai.request('localhost:3000')
-			.del('/api/collegeteams/' + LSU_id)
+			.get('/api/nflteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
-				expect(res).to.have.status(200);
+				expect(res).to.have.status(404);
+				done();
+			});
+	});
+
+	it('GET request to UNKNOWN ID should respond with an ERROR message', function(done) {
+		chai.request('localhost:3000')
+			.get('/api/collegeteams/999999999999')
+			.end(function(err, res) {
+				expect(err).to.be.null;
 				expect(res).to.be.json;
-				expect(res.body.message).to.equal('ID: ' + LSU_id + ' deleted from DB');
+				expect(res.body.error).to.equal('Error fetching ID');
 				done();
 			});
 	});
 });
+
