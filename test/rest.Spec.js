@@ -20,7 +20,7 @@ function findByName(res, name) {
 describe('Single Resource REST API', function() {
 	before(function(done) {
 		startServer();
-		var conn = dbConnect();
+		var conn = dbConnect('mongodb://localhost/college_teams');
 		conn.connection.on('open', function() {
     	conn.connection.db.dropDatabase();
    		console.log('======Dropped DBs========\n');

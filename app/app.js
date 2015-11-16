@@ -7,4 +7,4 @@ var dbConnect = require('./models/db');
 startServer();
 
 // Connect to DB
-dbConnect();
+dbConnect('mongodb://localhost/college_teams');
