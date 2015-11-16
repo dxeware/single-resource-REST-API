@@ -1,20 +1,10 @@
 "use strict";
 
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var router = require('./app/routes/router.js');
+var db = require('./app/models/db');
+var app = require('./app/app');
 
-app.use(bodyParser.json());
+db('mongodb://localhost/college_teams');
 
-function startServer() {
-	
-	app.use('/api', router);
-
-	var server = app.listen(3000, function() {
-		console.log('Listening on port 3000.....');
-		return server;
-	});
-}
-
-module.exports = startServer;
+var server = app.listen(3000, function() {
+	console.log('Listening on port 3000.....');
+});

@@ -3,9 +3,10 @@
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var expect = require('chai').expect;
-var startServer = require("../server");
-var dbConnect = require('../app/models/db');
+var db = require('../app/models/db');
+var app = require('../app/app');
 var LSU_id = 0;
+var port = 3001;
 
 chai.use(chaiHttp);
 
@@ -17,19 +18,23 @@ function findByName(res, name) {
 	}
 }
 
+function chaiRequest() {
+ 	return chai.request(`localhost:${port}`);
+}
+
 describe('Single Resource REST API', function() {
 	before(function(done) {
-		startServer();
-		var conn = dbConnect('mongodb://localhost/college_teams');
+		var conn = db('mongodb://localhost/college_teams');
 		conn.connection.on('open', function() {
-    	conn.connection.db.dropDatabase();
-   		console.log('======Dropped DBs========\n');
-    	done();
+    	conn.connection.db.dropDatabase(function() {
+   			console.log('======Dropped DBs========\n');
+   			app.listen(port, done);
+    	});
     });
 	});
 
 	it('GET /api request should return WELCOME!', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api')
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -41,7 +46,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('GET /api/collegeteams request should respond with no data before data is added to DB', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -53,7 +58,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('POST /api/collegeteams request should add a team to DB', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.post('/api/collegeteams')
 			.send({ name: 'LSU', mascot: 'tiger' })
 			.end(function(err, res) {
@@ -66,7 +71,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('GET /api/collegeteams request should respond with LSU data after LSU was added to DB', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -79,7 +84,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('POST /api/collegeteams request should add a 2nd team to DB', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.post('/api/collegeteams')
 			.send({ name: 'Oregon', mascot: 'duck' })
 			.end(function(err, res) {
@@ -92,7 +97,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('GET /api/collegeteams request should respond with LSU and Oregon data after Oregon is added to DB', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -105,14 +110,15 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('DELETE /api/collegeteams/:id should delete Oregon data after finding Oregon ID', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
 				expect(res).to.be.json;
 				var id = findByName(res, 'Oregon');
-				chai.request('localhost:3000')
+
+				chaiRequest()
 					.del('/api/collegeteams/' + id)
 					.end(function(err, res) {
 						expect(err).to.be.null;
@@ -125,14 +131,15 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('PUT /api/collegeteams/:id request should update LSU mascot data', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
 				expect(res).to.be.json;
 				LSU_id = findByName(res, 'LSU');
-				chai.request('localhost:3000')
+				
+				chaiRequest()
 					.put('/api/collegeteams/' + LSU_id)
 					.send({ name: 'LSU', mascot: 'Mike the Tiger' })
 					.end(function(err, res) {
@@ -146,7 +153,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('GET /api/collegeteams/:id request should respond with NEW LSU data after LSU mascot was updated', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api/collegeteams/' + LSU_id)
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -159,7 +166,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('GET request to UNKNOWN route should respond with 404', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api/nflteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -169,7 +176,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('GET request to UNKNOWN ID should respond with an ERROR message', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.get('/api/collegeteams/999999999999')
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -180,7 +187,7 @@ describe('Single Resource REST API', function() {
 	});
 
 	it('POST /api/collegeteams request FAILS due to DATA VALIDATION b/c mascot is required', function(done) {
-		chai.request('localhost:3000')
+		chaiRequest()
 			.post('/api/collegeteams')
 			.send({ name: 'Virginia' })
 			.end(function(err, res) {

@@ -1,10 +1,11 @@
 "use strict";
 
-var startServer = require('../server');
-var dbConnect = require('./models/db');
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+var router = require('./routes/router.js');
 
-// Start the server
-startServer();
+app.use(bodyParser.json());
+app.use('/api', router);
 
-// Connect to DB
-dbConnect('mongodb://localhost/college_teams');
+module.exports = app;
