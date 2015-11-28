@@ -1,83 +1,46 @@
 "use strict";
 
 var express = require('express');
+var passport = require('passport');
 var router = express.Router();
-var CollegeTeam = require('../models/college_team');
+var Account = require('../models/account');
 
-router.use(function(req, res, next) {
-  next();
+router.get('/', function(req, res, next) {
+	res.render('index', {title: 'Express', user: req.user });
 });
 
-router.get('/', function(req, res) {
-  res.json({message: 'WELCOME!'});
+router.get('/register', function(req, res) {
+	res.render('register', {});
 });
 
-router.route('/collegeteams')
-	.get(function(req, res) {
-		CollegeTeam.find(function(err, teams) {
-			if (err) {
-				res.send(err);
-			} else {
-				res.json(teams);
-			}
-		});
-	})
-	.post(function(req, res) {
-		var team = new CollegeTeam();
-
-		team.name = req.body.name;
-		team.mascot = req.body.mascot;
-
-		team.save(function(err) {
-			if (err) {
-		 		res.send(err);
-			} else {
-		 		var message = team.name + ' added to DB';
-				res.json({message: message});
-			}
+router.post('/register', function(req, res) {
+	Account.register(new Account({
+		username: req.body.username
+	}),
+	req.body.password, function(err, account) {
+		if (err) {
+			return res.render('register', {
+				info: 'Sorry, username is not available'
+			});
+		}
+		passport.authenticate('local')(req, res, function() {
+			res.redirect('/');
 		});
 	});
+});
 
-router.route('/collegeteams/:id')
-	.get(function(req, res) {
-		var id = req.params.id;
-		CollegeTeam.findById(id, function(err, team) {
-			if (err) {
-				res.json({error: "Error fetching ID"});
-			} else {
-				res.json(team);
-			}
-		});
-	})
-	.put(function(req, res) {
-		var id = req.params.id;
-		CollegeTeam.findById(id, function(err, team) {
-			if (err) {
-				res.json({error: "Error fetching ID"});
-			} else {
-				team.name = req.body.name;
-				team.mascot = req.body.mascot;
-				team.save(function(err) {
-					if (err) {
-						res.send(err);
-					} else {
-				  	var message = 'ID: ' + id + ' updated in DB';
-						res.json({message: message});
-					}
-				});
-			}
-		});
-	})
-	.delete(function(req, res) {
-		var id = req.params.id;
-		CollegeTeam.remove({ _id: id }, function(err) {
-			if (err) {
-				res.send(err);
-			} else {
-				var message = 'ID: ' + id + ' deleted from DB';
-				res.json({message: message});
-			}
-		});
-	});
+router.get('/login', function(req, res) {
+	res.render('login', {user: req.user});
+});
+
+router.post('/login', passport.authenticate('local'), function(req, res) {
+	res.redirect('/');
+});
+
+router.get('/logout', function(req, res) {
+	req.logout();
+	res.redirect('/');
+});
+
 
 module.exports = router;

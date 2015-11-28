@@ -24,6 +24,11 @@ function chaiRequest() {
 
 describe('Single Resource REST API', function() {
 	before(function(done) {
+
+		// Set up 'test' environment variable
+		process.env.TEST = 'test';
+
+		// Connect to DB and then drop database
 		var conn = db('mongodb://localhost/college_teams');
 		conn.connection.on('open', function() {
     	conn.connection.db.dropDatabase(function() {
@@ -33,21 +38,41 @@ describe('Single Resource REST API', function() {
     });
 	});
 
-	it('GET /api request should return WELCOME!', function(done) {
+	it('GET / request should contain Login and Register links', function(done) {
 		chaiRequest()
-			.get('/api')
+			.get('/')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
-				expect(res).to.be.json;
-				expect(res.body.message).to.equal('WELCOME!');
+				expect(res.text).to.include('/login');
+				expect(res.text).to.include('/register');
 				done();
 			});
 	});
 
-	it('GET /api/collegeteams request should respond with no data before data is added to DB', function(done) {
+	it('Registering a user should return status code 200', function(done) {
 		chaiRequest()
-			.get('/api/collegeteams')
+			.post('/register')
+			.send({ username: 'superfan', password: 'football' })
+			.end(function(err, res) {
+				expect(res).to.have.status(200);
+				done();
+			});
+	});
+
+	it('Login an exising user should return status code 200', function(done) {
+		chaiRequest()
+			.post('/login')
+			.send({ username: 'superfan', password: 'football' })
+			.end(function(err, res) {
+				expect(res).to.have.status(200);
+				done();
+			});
+	});
+
+	it('GET /collegeteams request should respond with no data before data is added to DB', function(done) {
+		chaiRequest()
+			.get('/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
@@ -57,9 +82,9 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('POST /api/collegeteams request should add a team to DB', function(done) {
+	it('POST /collegeteams request should add a team to DB', function(done) {
 		chaiRequest()
-			.post('/api/collegeteams')
+			.post('/collegeteams')
 			.send({ name: 'LSU', mascot: 'tiger' })
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -70,9 +95,9 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('GET /api/collegeteams request should respond with LSU data after LSU was added to DB', function(done) {
+	it('GET /collegeteams request should respond with LSU data after LSU was added to DB', function(done) {
 		chaiRequest()
-			.get('/api/collegeteams')
+			.get('/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
@@ -83,9 +108,9 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('POST /api/collegeteams request should add a 2nd team to DB', function(done) {
+	it('POST /collegeteams request should add a 2nd team to DB', function(done) {
 		chaiRequest()
-			.post('/api/collegeteams')
+			.post('/collegeteams')
 			.send({ name: 'Oregon', mascot: 'duck' })
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -96,9 +121,9 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('GET /api/collegeteams request should respond with LSU and Oregon data after Oregon is added to DB', function(done) {
+	it('GET /collegeteams request should respond with LSU and Oregon data after Oregon is added to DB', function(done) {
 		chaiRequest()
-			.get('/api/collegeteams')
+			.get('/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
@@ -109,9 +134,9 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('DELETE /api/collegeteams/:id should delete Oregon data after finding Oregon ID', function(done) {
+	it('DELETE /collegeteams/:id should delete Oregon data after finding Oregon ID', function(done) {
 		chaiRequest()
-			.get('/api/collegeteams')
+			.get('/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
@@ -119,7 +144,7 @@ describe('Single Resource REST API', function() {
 				var id = findByName(res, 'Oregon');
 
 				chaiRequest()
-					.del('/api/collegeteams/' + id)
+					.del('/collegeteams/' + id)
 					.end(function(err, res) {
 						expect(err).to.be.null;
 						expect(res).to.have.status(200);
@@ -130,9 +155,9 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('PUT /api/collegeteams/:id request should update LSU mascot data', function(done) {
+	it('PUT /collegeteams/:id request should update LSU mascot data', function(done) {
 		chaiRequest()
-			.get('/api/collegeteams')
+			.get('/collegeteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
@@ -140,7 +165,7 @@ describe('Single Resource REST API', function() {
 				LSU_id = findByName(res, 'LSU');
 				
 				chaiRequest()
-					.put('/api/collegeteams/' + LSU_id)
+					.put('/collegeteams/' + LSU_id)
 					.send({ name: 'LSU', mascot: 'Mike the Tiger' })
 					.end(function(err, res) {
 						expect(err).to.be.null;
@@ -152,9 +177,9 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('GET /api/collegeteams/:id request should respond with NEW LSU data after LSU mascot was updated', function(done) {
+	it('GET /collegeteams/:id request should respond with NEW LSU data after LSU mascot was updated', function(done) {
 		chaiRequest()
-			.get('/api/collegeteams/' + LSU_id)
+			.get('/collegeteams/' + LSU_id)
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(200);
@@ -167,7 +192,7 @@ describe('Single Resource REST API', function() {
 
 	it('GET request to UNKNOWN route should respond with 404', function(done) {
 		chaiRequest()
-			.get('/api/nflteams')
+			.get('/nflteams')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.have.status(404);
@@ -177,7 +202,7 @@ describe('Single Resource REST API', function() {
 
 	it('GET request to UNKNOWN ID should respond with an ERROR message', function(done) {
 		chaiRequest()
-			.get('/api/collegeteams/999999999999')
+			.get('/collegeteams/999999999999')
 			.end(function(err, res) {
 				expect(err).to.be.null;
 				expect(res).to.be.json;
@@ -186,9 +211,9 @@ describe('Single Resource REST API', function() {
 			});
 	});
 
-	it('POST /api/collegeteams request FAILS due to DATA VALIDATION b/c mascot is required', function(done) {
+	it('POST /collegeteams request FAILS due to DATA VALIDATION b/c mascot is required', function(done) {
 		chaiRequest()
-			.post('/api/collegeteams')
+			.post('/collegeteams')
 			.send({ name: 'Virginia' })
 			.end(function(err, res) {
 				expect(err).to.be.null;
@@ -197,5 +222,5 @@ describe('Single Resource REST API', function() {
 				expect(res.body.message).to.equal('CollegeTeam validation failed');
 				done();
 			});
-	});
+	}); 
 });
