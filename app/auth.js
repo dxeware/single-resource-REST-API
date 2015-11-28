@@ -1,3 +1,5 @@
+"use strict";
+
 function ensureAuthenticated(req, res, next) {
   if (process.env.TEST === 'test') {
     return next();

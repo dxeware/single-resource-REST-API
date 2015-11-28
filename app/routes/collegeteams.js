@@ -1,7 +1,6 @@
 "use strict";
 
 var express = require('express');
-var passport = require('passport');
 var router = express.Router();
 var CollegeTeam = require('../models/college_team');
 

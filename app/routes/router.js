@@ -5,7 +5,7 @@ var passport = require('passport');
 var router = express.Router();
 var Account = require('../models/account');
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
 	res.render('index', {title: 'Express', user: req.user });
 });
 
@@ -17,7 +17,7 @@ router.post('/register', function(req, res) {
 	Account.register(new Account({
 		username: req.body.username
 	}),
-	req.body.password, function(err, account) {
+	req.body.password, function(err) {
 		if (err) {
 			return res.render('register', {
 				info: 'Sorry, username is not available'
