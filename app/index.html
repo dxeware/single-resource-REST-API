@@ -7,11 +7,6 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
-  <!-- <header>
-      <div>
-          <img src="/assets/img/logo.png" alt="logo">
-      </div>
-  </header> -->
 
   <main>
     <header>
@@ -26,7 +21,7 @@
       <section>
         <div class="container"> 
           <form>
-            <input type="text" placeholder="Enter Team" ng-model="newTeam.name" value="" required>
+            <input type="text" placeholder="Enter Team Name" ng-model="newTeam.name" value="" required>
             <input type="text" placeholder="Enter Mascot" ng-model="newTeam.mascot" value="" required>
             <button type="submit" data-ng-click="addTeam(newTeam)"><span>Add A College Team</span></button>
           </form>
@@ -37,13 +32,12 @@
         <div class="container"> 
           <table>
             <tr>
-              <th>Name</th>
+              <th>Team Name</th>
               <th>Mascot</th>
             </tr>
             <tr ng-repeat="team in list.teams">
-              <!--<td><input class="form-control" ng-model="contact.name"></td> -->
-              <td><input class="form-control" ng-model="team.name"></td>
-              <td><input class="form-control" ng-model="team.mascot"></td>
+              <td><input ng-model="team.name"></td>
+              <td><input ng-model="team.mascot"></td>
               <td><button type="submit" data-ng-click="updateTeam(team)">Update</button></td>
               <td><button type="submit" data-ng-click="deleteTeam(team._id)">Delete</button></td>
             </tr>
@@ -55,7 +49,6 @@
 
   </main>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
   <script type="text/javascript" src="/controllers/teams.controller.js"></script>
 </body>
 </html>

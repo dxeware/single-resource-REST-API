@@ -1,3 +1,5 @@
+"use strict";
+
 function updateTeams($scope, $http) {
   $http.get( '/collegeteams' ).then(
    function(response) {
@@ -25,26 +27,10 @@ function CollegeTeamCtrl($scope, $http) {
     mascot: '',
   };
 
-  console.log('CollegeTeamCtrl.....');
-
-  /*$http.get( '/collegeteams' ).then(
-      function(response) {
-        console.log("POST success");
-        console.log(response);
-        $scope.list.teams = response.data;
-      },
-      function(error) {
-        console.log("POST error");
-      }
-    );
-*/
   updateTeams($scope, $http);
 
   $scope.addTeam = function( newTeam ) {
-    console.log('newTeam button pressed');
-
     $scope.newTeam = newTeam;
-    console.log('newTeam = ' + newTeam.name + ',' + newTeam.mascot);
 
     $http.post( '/collegeteams', $scope.newTeam ).then(
       function(response) {
@@ -59,8 +45,6 @@ function CollegeTeamCtrl($scope, $http) {
   };
 
   $scope.updateTeam = function( team ) {
-    console.log('delete button pressed: ' + team._id);
-
     $http.put( '/collegeteams/' + team._id, team ).then(
       function(response) {
         console.log("UPDATE success");
@@ -74,8 +58,6 @@ function CollegeTeamCtrl($scope, $http) {
   };
 
   $scope.deleteTeam = function( id ) {
-    console.log('delete button pressed: ' + id);
-
     $http.delete( '/collegeteams/' + id, id ).then(
       function(response) {
         console.log("DELETE success");
