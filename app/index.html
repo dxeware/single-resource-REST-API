@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="collegeTeams">
+<head>
+    <title>Todo Application</title>
+    <!-- <link rel="stylesheet" type="text/css" href="/assets/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'> -->
+</head>
+<body>
+    <h1>Hello</h1>
+    <!-- <header>
+        <div>
+            <img src="/assets/img/logo.png" alt="logo">
+        </div>
+    </header> -->
+
+    <main ng-controller="CollegeTeamCtrl">
+        <section>
+            <h2>College Teams</h2>
+                    <table>
+                      <tr>
+                        <th>Name</td>
+                        <th>Mascot</td>
+                      </tr>
+                      <tr ng-repeat="team in list.teams">
+                        <td>{{ team.name }}</td>
+                        <td>{{ team.mascot }}</td>
+                      </tr>
+                    </table>
+        </section>
+
+        <section role="add-task">
+            <form>
+                <input type="text" placeholder="Enter Team" ng-model="newTeam.name" value="" required>
+                <input type="text" placeholder="Enter Mascot" ng-model="newTeam.mascot" value="" required>
+                <button type="submit" data-ng-click="addTeam(newTeam)"><span>Add Team</span></button>
+            </form>
+        </section>
+
+        <section role="current-tasks">
+            <h3>Current Tasks</h3>
+        </section>
+
+        <section role="completed-tasks">
+            <h3>Completed Tasks</h3>
+            <ul class="tasks">
+                <li>
+                    <span class="item">Some task item</span>
+                </li>
+            </ul>
+            <button><span>Remove All Completed Tasks</span></button>
+        </section>
+    </main>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
+    <script type="text/javascript" src="/controllers/teams.controller.js"></script>
+</body>
+</html>
