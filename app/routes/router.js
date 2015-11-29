@@ -58,6 +58,8 @@ router.route('/collegeteams/:id')
 			} else {
 				team.name = req.body.name;
 				team.mascot = req.body.mascot;
+				console.log('PUT ID: ' + id);
+				console.log('name mascot: ' + team.name + ' ' + team.mascot);
 				team.save(function(err) {
 					if (err) {
 						res.send(err);
@@ -71,10 +73,12 @@ router.route('/collegeteams/:id')
 	})
 	.delete(function(req, res) {
 		var id = req.params.id;
+		console.log("Recvd id = " + id);
 		CollegeTeam.remove({ _id: id }, function(err) {
 			if (err) {
 				res.send(err);
 			} else {
+				console.log("delete success");
 				var message = 'ID: ' + id + ' deleted from DB';
 				res.json({message: message});
 			}
