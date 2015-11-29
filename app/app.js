@@ -6,6 +6,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var flash = require('connect-flash');
 var router = require('./routes/router.js');
 var collegeteams = require('./routes/collegeteams.js');
 var ensureAuthenticated = require('./auth.js');
@@ -20,6 +21,7 @@ app.set('view engine', 'jade');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(flash());
 app.use(session({
   secret: 'i love labs',
   resave: false,

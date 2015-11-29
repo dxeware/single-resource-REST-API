@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/register', function(req, res) {
-	res.render('register', {});
+	res.render('register', {message: req.flash('error') });
 });
 
 router.post('/register', function(req, res) {
@@ -19,23 +19,24 @@ router.post('/register', function(req, res) {
 	}),
 	req.body.password, function(err) {
 		if (err) {
-			return res.render('register', {
-				info: 'Sorry, username is not available'
+			req.flash('error', 'Sorry, username is not available');
+			res.redirect('/register');
+		} else {
+			passport.authenticate('local')(req, res, function() {
+				res.redirect('/');
 			});
 		}
-		passport.authenticate('local')(req, res, function() {
-			res.redirect('/');
-		});
 	});
 });
 
 router.get('/login', function(req, res) {
-	res.render('login', {user: req.user});
+	res.render('login', {user: req.user, message: req.flash('error')});
 });
 
-router.post('/login', passport.authenticate('local'), function(req, res) {
-	res.redirect('/');
-});
+router.post('/login',
+  passport.authenticate('local', { successRedirect: '/',
+                                   failureRedirect: '/login',
+                                   failureFlash: 'Invalid username or pass.' } ));
 
 router.get('/logout', function(req, res) {
 	req.logout();
