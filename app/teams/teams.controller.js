@@ -15,7 +15,14 @@ function updateTeams($scope, $http) {
   );
 }
 
-var collegeTeams = angular.module('collegeTeams', []);
+var collegeTeams = angular.module('collegeTeams', ['ngRoute']);
+
+collegeTeams.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/teams', {
+    templateUrl: 'teams/teams.html',
+    controller: 'CollegeTeamCtrl'
+  });
+}]);
 
 collegeTeams.controller('CollegeTeamCtrl', ['$scope', '$http', CollegeTeamCtrl]);
 
