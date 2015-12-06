@@ -4,7 +4,7 @@ describe('collegeTeams module', function() {
 
   var teamCtrl, scope;
 
-  beforeEach(module('collegeTeams'));
+  beforeEach(module('teamApp'));
   beforeEach(inject(function($controller, $rootScope){
     scope = $rootScope.$new();
     teamCtrl = $controller('CollegeTeamCtrl', {

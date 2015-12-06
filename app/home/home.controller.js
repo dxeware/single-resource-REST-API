@@ -1,13 +1,6 @@
-var homePage = angular.module('homePage', ['ngRoute']);
+"use strict";
 
-homePage.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home', {
-    templateUrl: 'home/home.html',
-    controller: 'HomePageCtrl'
-  });
-}]);
-
-homePage.controller('HomePageCtrl', ['$scope', HomePageCtrl]);
+HomePageCtrl.$inject = ['$scope'];
 
 function HomePageCtrl($scope) {
   $scope.greeting = {};
@@ -17,3 +10,18 @@ function HomePageCtrl($scope) {
   ];
 
 }
+
+angular.module('teamApp')
+        .config(config)
+        .controller( 'HomePageCtrl', HomePageCtrl );
+
+// var homePage = angular.module('homePage', ['ngRoute']);
+
+// homePage.config(['$routeProvider', function($routeProvider) {
+//   $routeProvider.when('/home', {
+//     templateUrl: 'home/home.html',
+//     controller: 'HomePageCtrl'
+//   });
+// }]);
+
+// homePage.controller('HomePageCtrl', ['$scope', HomePageCtrl]);

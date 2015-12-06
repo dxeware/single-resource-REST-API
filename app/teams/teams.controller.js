@@ -15,16 +15,7 @@ function updateTeams($scope, $http) {
   );
 }
 
-var collegeTeams = angular.module('collegeTeams', ['ngRoute']);
-
-collegeTeams.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/teams', {
-    templateUrl: 'teams/teams.html',
-    controller: 'CollegeTeamCtrl'
-  });
-}]);
-
-collegeTeams.controller('CollegeTeamCtrl', ['$scope', '$http', CollegeTeamCtrl]);
+CollegeTeamCtrl.$inject = ['$scope', '$http'];
 
 function CollegeTeamCtrl($scope, $http) {
   $scope.list = {};
@@ -77,3 +68,18 @@ function CollegeTeamCtrl($scope, $http) {
     );
   };
 }
+
+// var collegeTeams = angular.module('collegeTeams', ['ngRoute']);
+
+// collegeTeams.config(['$routeProvider', function($routeProvider) {
+//   $routeProvider.when('/teams', {
+//     templateUrl: 'teams/teams.html',
+//     controller: 'CollegeTeamCtrl'
+//   });
+// }]);
+
+// collegeTeams.controller('CollegeTeamCtrl', ['$scope', '$http', CollegeTeamCtrl]);
+
+angular.module('teamApp')
+        .config(config)
+        .controller( 'CollegeTeamCtrl', CollegeTeamCtrl );

@@ -2,7 +2,7 @@
 
 describe('homePage module', function() {
 
-  beforeEach(module('homePage'));
+  beforeEach(module('teamApp'));
   describe('homePage controller', function(){
     it('should check the greeting messages....', inject(function($rootScope, $controller) {
       var scope = $rootScope.$new();
