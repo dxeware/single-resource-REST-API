@@ -3,13 +3,14 @@
 var express = require('express');
 var router = express.Router();
 var CollegeTeam = require('../models/college_team');
+var path = require('path');
 
 router.use(function(req, res, next) {
   next();
 });
 
 router.get('/', function(req, res) {
-  res.json({message: 'WELCOME!'});
+	res.sendFile(path.resolve('app/index.html'));
 });
 
 router.route('/collegeteams')
