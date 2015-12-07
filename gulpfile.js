@@ -19,7 +19,10 @@ gulp.task('lint', function() {
 // task to run our tests
 gulp.task('test', function() {
   return gulp.src(testFiles)
-    .pipe(mocha());
+    .pipe(mocha())
+    .on('end', function() {
+      process.exit();
+    });
 });
 
 // Set up which files to watch and what tasks

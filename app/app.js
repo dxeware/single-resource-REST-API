@@ -5,7 +5,9 @@ var app = express();
 var bodyParser = require('body-parser');
 var router = require('./routes/router.js');
 
+app.use(express.static(__dirname + '/'));
+
 app.use(bodyParser.json());
-app.use('/api', router);
+app.use('/', router);
 
 module.exports = app;
