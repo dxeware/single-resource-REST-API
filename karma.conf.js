@@ -9,6 +9,7 @@ module.exports = function(config){
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular-mocks.js',
       'app/app.module.js',
       'app/app.config.js',
+      'app/services/teams.service.js',
       'app/home/*.js',
       'app/teams/*.js',
     ],
