@@ -1,26 +1,26 @@
-<div class="content" ng-controller="CollegeTeamCtrl">      
+<div class="content">      
   <section>
     <div class="container"> 
       <form>
-        <input type="text" placeholder="Enter Team Name" ng-model="newTeam.name" value="" required>
-        <input type="text" placeholder="Enter Mascot" ng-model="newTeam.mascot" value="" required>
-        <button type="submit" data-ng-click="addTeam(newTeam)"><span>Add A College Team</span></button>
+        <input type="text" placeholder="Enter Team Name" ng-model="teamsVm.newTeam.name" value="" required>
+        <input type="text" placeholder="Enter Mascot" ng-model="teamsVm.newTeam.mascot" value="" required>
+        <button type="submit" data-ng-click="teamsVm.addTeam(teamsVm.newTeam)"><span>Add A College Team</span></button>
       </form>
     </div>
   </section>
  
-  <section ng-if="list.teams[0].name">
+  <section ng-if="teamsVm.list.teams[0].name">
     <div class="container"> 
       <table>
         <tr=>
           <th>Team Name</th>
           <th>Mascot</th>
         </tr>
-        <tr ng-repeat="team in list.teams">
+        <tr ng-repeat="team in teamsVm.list.teams">
           <td><input ng-model="team.name"></td>
           <td><input ng-model="team.mascot"></td>
-          <td><button type="submit" data-ng-click="updateTeam(team)">Update</button></td>
-          <td><button type="submit" data-ng-click="deleteTeam(team._id)">Delete</button></td>
+          <td><button type="submit" data-ng-click="teamsVm.updateTeam(team)">Update</button></td>
+          <td><button type="submit" data-ng-click="teamsVm.deleteTeam(team._id)">Delete</button></td>
         </tr>
       </table>
     </div>

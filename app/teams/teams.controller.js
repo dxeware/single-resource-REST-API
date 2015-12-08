@@ -1,13 +1,13 @@
 "use strict";
 
-function updateTeams($scope, $http) {
+function updateTeams(vm, $http) {
   $http.get( '/collegeteams' ).then(
    function(response) {
      console.log("GET success");
      console.log(response);
-     $scope.list.teams = response.data;
-     $scope.newTeam.name = '';
-     $scope.newTeam.mascot = '';
+     vm.list.teams = response.data;
+     vm.newTeam.name = '';
+     vm.newTeam.mascot = '';
    },
    function(error) {
      console.log("GET error");
@@ -15,50 +15,51 @@ function updateTeams($scope, $http) {
   );
 }
 
-CollegeTeamCtrl.$inject = ['$scope', '$http', 'TeamService'];
+CollegeTeamCtrl.$inject = ['$http', 'TeamService'];
 
-function CollegeTeamCtrl($scope, $http, TeamService) {
-  $scope.list = {};
-  $scope.newTeam = {
+function CollegeTeamCtrl($http, TeamService) {
+  var vm = this;
+  vm.list = {};
+  vm.newTeam = {
     _id: '',
     name: '',
     mascot: '',
   };
 
-  updateTeams($scope, $http);
+  updateTeams(vm, $http);
 
-  $scope.addTeam = function(newTeam) {
-    $scope.newTeam = newTeam;
+  vm.addTeam = function(newTeam) {
+    vm.newTeam = newTeam;
 
-    TeamService.addTeam($scope.newTeam)
+    TeamService.addTeam(vm.newTeam)
       .then(function(response) {
         console.log("POST success");
         console.log(response);
-        updateTeams($scope, $http);
+        updateTeams(vm, $http);
       })
       .catch(function(error) {
         console.log("POST error");
       });
   };
 
-  $scope.updateTeam = function(team) {
+  vm.updateTeam = function(team) {
     TeamService.updateTeam(team)
       .then(function(response) {
         console.log("UPDATE success");
         console.log(response);
-        updateTeams($scope, $http);
+        updateTeams(vm, $http);
       })
       .catch(function(error) {
         console.log("UPDATE error");
       });
   };
 
-  $scope.deleteTeam = function(id) {
+  vm.deleteTeam = function(id) {
     TeamService.deleteTeam(id)
       .then(function(response) {
         console.log("DELETE success");
         console.log(response);
-        updateTeams($scope, $http);
+        updateTeams(vm, $http);
       })
       .catch(function(error) {
         console.log("DELETE error");
@@ -75,7 +76,7 @@ function CollegeTeamCtrl($scope, $http, TeamService) {
 //   });
 // }]);
 
-// collegeTeams.controller('CollegeTeamCtrl', ['$scope', '$http', CollegeTeamCtrl]);
+// collegeTeams.controller('CollegeTeamCtrl', ['vm', '$http', CollegeTeamCtrl]);
 
 angular.module('teamApp')
         .config(config)

@@ -2,12 +2,12 @@
 
 describe('collegeTeams module', function() {
 
-  var teamCtrl, scope;
+  var vm, scope;
 
   beforeEach(module('teamApp'));
   beforeEach(inject(function($controller, $rootScope){
     scope = $rootScope.$new();
-    teamCtrl = $controller('CollegeTeamCtrl', {
+    vm = $controller('CollegeTeamCtrl', {
       $scope: scope
     });
   }));
@@ -30,8 +30,8 @@ describe('collegeTeams module', function() {
     // Ensure that the HTTP mock code is applied
     $httpBackend.flush();
 
-    expect(scope.list.teams).toBeDefined();
-    expect(scope.list.teams[0].name).toBe('Virginia');
+    expect(vm.list.teams).toBeDefined();
+    expect(vm.list.teams[0].name).toBe('Virginia');
 
     // Ensure test is run
     $httpBackend.verifyNoOutstandingRequest();

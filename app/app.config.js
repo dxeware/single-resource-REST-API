@@ -16,7 +16,8 @@ function config($routeProvider) {
     controller : 'HomePageCtrl',
   }).when('/teams', {
     templateUrl: 'teams/teams.html',
-    controller: 'CollegeTeamCtrl'
+    controller: 'CollegeTeamCtrl',
+    controllerAs: 'teamsVm'
   // }).when('/error', {
   //   templateUrl : 'home/home.html',
   //   controller : 'HomePageCtrl',
