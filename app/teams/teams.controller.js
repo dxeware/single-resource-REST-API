@@ -15,9 +15,9 @@ function updateTeams($scope, $http) {
   );
 }
 
-CollegeTeamCtrl.$inject = ['$scope', '$http'];
+CollegeTeamCtrl.$inject = ['$scope', '$http', 'TeamService'];
 
-function CollegeTeamCtrl($scope, $http) {
+function CollegeTeamCtrl($scope, $http, TeamService) {
   $scope.list = {};
   $scope.newTeam = {
     _id: '',
@@ -27,45 +27,42 @@ function CollegeTeamCtrl($scope, $http) {
 
   updateTeams($scope, $http);
 
-  $scope.addTeam = function( newTeam ) {
+  $scope.addTeam = function(newTeam) {
     $scope.newTeam = newTeam;
 
-    $http.post( '/collegeteams', $scope.newTeam ).then(
-      function(response) {
+    TeamService.addTeam($scope.newTeam)
+      .then(function(response) {
         console.log("POST success");
         console.log(response);
         updateTeams($scope, $http);
-      },
-      function(error) {
+      })
+      .catch(function(error) {
         console.log("POST error");
-      }
-    );
+      });
   };
 
-  $scope.updateTeam = function( team ) {
-    $http.put( '/collegeteams/' + team._id, team ).then(
-      function(response) {
+  $scope.updateTeam = function(team) {
+    TeamService.updateTeam(team)
+      .then(function(response) {
         console.log("UPDATE success");
         console.log(response);
         updateTeams($scope, $http);
-      },
-      function(error) {
+      })
+      .catch(function(error) {
         console.log("UPDATE error");
-      }
-    );
+      });
   };
 
-  $scope.deleteTeam = function( id ) {
-    $http.delete( '/collegeteams/' + id, id ).then(
-      function(response) {
+  $scope.deleteTeam = function(id) {
+    TeamService.deleteTeam(id)
+      .then(function(response) {
         console.log("DELETE success");
         console.log(response);
         updateTeams($scope, $http);
-      },
-      function(error) {
+      })
+      .catch(function(error) {
         console.log("DELETE error");
-      }
-    );
+      });
   };
 }
 
