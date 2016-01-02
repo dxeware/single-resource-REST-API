@@ -4,8 +4,18 @@ describe('collegeTeams module', function() {
 
   var vm, scope;
 
+  // beforeEach(inject(function() {
+  //   console.log("===========================");
+  //   console.log("=====teams.Spec.js====");
+  //   console.log("===========================");
+  // }));
+
   beforeEach(module('teamApp'));
   beforeEach(inject(function($controller, $rootScope){
+    console.log("===========================");
+    console.log("=====teams.Spec.js====");
+    console.log("===========================");
+    
     scope = $rootScope.$new();
     vm = $controller('CollegeTeamCtrl', {
       $scope: scope
