@@ -10,7 +10,7 @@ function updateTeams(vm, $http) {
      vm.newTeam.mascot = '';
    },
    function(error) {
-     console.log("GET error");
+     console.log("GET error:", error);
    }
   );
 }
@@ -38,7 +38,7 @@ function CollegeTeamCtrl($http, TeamService) {
         updateTeams(vm, $http);
       })
       .catch(function(error) {
-        console.log("POST error");
+        console.log("POST error:", error);
       });
   };
 
@@ -50,7 +50,7 @@ function CollegeTeamCtrl($http, TeamService) {
         updateTeams(vm, $http);
       })
       .catch(function(error) {
-        console.log("UPDATE error");
+        console.log("UPDATE error:", error);
       });
   };
 
@@ -62,21 +62,10 @@ function CollegeTeamCtrl($http, TeamService) {
         updateTeams(vm, $http);
       })
       .catch(function(error) {
-        console.log("DELETE error");
+        console.log("DELETE error:", error);
       });
   };
 }
-
-// var collegeTeams = angular.module('collegeTeams', ['ngRoute']);
-
-// collegeTeams.config(['$routeProvider', function($routeProvider) {
-//   $routeProvider.when('/teams', {
-//     templateUrl: 'teams/teams.html',
-//     controller: 'CollegeTeamCtrl'
-//   });
-// }]);
-
-// collegeTeams.controller('CollegeTeamCtrl', ['vm', '$http', CollegeTeamCtrl]);
 
 angular.module('teamApp')
         .config(config)

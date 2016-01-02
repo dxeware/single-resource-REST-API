@@ -3,10 +3,11 @@
 // get our packages
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
-var mocha = require('gulp-mocha');
+// var mocha = require('gulp-mocha');
+var karma = require('karma');
 
 // Files we're concerned about
-var files = ['./**/*.js', '!./node_modules/**'];
+var files = ['./**/*.js', '!./node_modules/**', '!./**/*.Spec.js'];
 var testFiles = ['./test/*.js'];
 
 // task to run jshint
@@ -16,13 +17,11 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish', { verbose: true }));
 });
 
-// task to run our tests
-gulp.task('test', function() {
-  return gulp.src(testFiles)
-    .pipe(mocha())
-    .on('end', function() {
-      process.exit();
-    });
+// task to run karma tests
+gulp.task('test', function (done) {
+  karma.server.start({
+    configFile: __dirname + '/karma.conf.js'
+  }, done);
 });
 
 // Set up which files to watch and what tasks
