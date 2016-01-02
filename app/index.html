@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="collegeTeams">
+<html ng-app="teamApp">
 <head>
     <title>College Football</title>
     <link rel="stylesheet" type="text/css" href="./assets/css/reset.css">
@@ -14,41 +14,24 @@
         <div class="navbar-header">
           <span>College Football Teams</span>
         </div>
+        <div>
+          <ul class="nav navbar-nav">
+            <li><a id="/home" href="#/home">Home</a></li>
+            <li><a id="/teams" href="#/teams">Teams</a></li>
+          </ul>
+        </div>
       </nav>
     </header> 
 
-    <div class="content" ng-controller="CollegeTeamCtrl">      
-      <section>
-        <div class="container"> 
-          <form>
-            <input type="text" placeholder="Enter Team Name" ng-model="newTeam.name" value="" required>
-            <input type="text" placeholder="Enter Mascot" ng-model="newTeam.mascot" value="" required>
-            <button type="submit" data-ng-click="addTeam(newTeam)"><span>Add A College Team</span></button>
-          </form>
-        </div>
-      </section>
- 
-      <section ng-if="list.teams[0].name">
-        <div class="container"> 
-          <table>
-            <tr=>
-              <th>Team Name</th>
-              <th>Mascot</th>
-            </tr>
-            <tr ng-repeat="team in list.teams">
-              <td><input ng-model="team.name"></td>
-              <td><input ng-model="team.mascot"></td>
-              <td><button type="submit" data-ng-click="updateTeam(team)">Update</button></td>
-              <td><button type="submit" data-ng-click="deleteTeam(team._id)">Delete</button></td>
-            </tr>
-          </table>
-        </div>
-      </section>
-
-    </div>
+    <section ng-view></section>
 
   </main>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
-  <script type="text/javascript" src="/controllers/teams.controller.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0-beta.2/angular-route.js"></script>
+  <script type="text/javascript" src="app.module.js"></script>
+  <script type="text/javascript" src="app.config.js"></script>
+  <script type="text/javascript" src="/teams/teams.controller.js"></script>
+  <script type="text/javascript" src="/services/teams.service.js"></script>
+  <script type="text/javascript" src="/home/home.controller.js"></script>
 </body>
 </html>

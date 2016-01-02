@@ -99,6 +99,10 @@ footer {
   background-color: #A5B4AC;
 }
 
+.welcome {
+  text-align: center;
+}
+
 .container {
   padding: 1rem 1rem;
   margin: 1rem 2rem;
@@ -130,4 +134,8 @@ footer {
 
 a:hover  {
   color: #353F5E;
+}
+
+a:target {
+  background-color: #A5B4AC;
 }
